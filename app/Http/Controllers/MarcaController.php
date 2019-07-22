@@ -132,6 +132,9 @@ class MarcaController extends Controller
                         'error' => $validate->errors()
                     ];
                 } else {
+                    unset($params_array['id']);
+                    unset($params_array['created_at']);
+                    
                     $marca = Marca::find($id);
 
                     $marca->update($params_array);

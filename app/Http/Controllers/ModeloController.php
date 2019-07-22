@@ -12,9 +12,18 @@ class ModeloController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function index(){
+
+        $modelos = Modelo::all()->load('talla', 'marca', 'tipo');
+
+        $data = [
+            'code' => 200,
+            'status' => 'success',
+            'modelos' => $modelos
+        ];
+
+
+        return response()->json($data, $data['code']);
     }
 
     /**
@@ -22,8 +31,7 @@ class ModeloController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create(){
         //
     }
 
@@ -33,9 +41,50 @@ class ModeloController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request){
+        $json = $request->input('json');
+        $params_array = json_decode($json, true);
+
+        if(!empty($params_array)){
+            $validate = \Validator::make($params_array, [
+                'tipo_id' => 'required|numeric',
+                'marca_id' => 'required|numeric',
+                'talla_id' => 'required|numeric',
+                'name' => 'required',
+                'stock' => 'nullable'
+            ]);
+
+            if($validate->fails()){
+                $data = [
+                    'code' => 400,
+                    'status' => 'error',
+                    'message' => $validate->errors()
+                ];
+            } else {
+                $modelo = new Modelo();
+                $modelo->tipo_id = $params_array['tipo_id'];
+                $modelo->marca_id = $params_array['marca_id'];
+                $modelo->talla_id = $params_array['talla_id'];
+                $modelo->name = $params_array['name'];
+                $modelo->stock = $params_array['stock'];
+
+                $modelo->save();
+
+                $data = [
+                    'code' => 200,
+                    'status' => 'success',
+                    'modelo' => $modelo
+                ];
+
+            }
+        } else {
+            $data = [
+                'code' => 200,
+                'status' => 'success',
+                'message' => 'No se encontraron datos'
+            ];
+        }
+        return response()->json($data, $data['code']);
     }
 
     /**
@@ -44,9 +93,23 @@ class ModeloController extends Controller
      * @param  \App\Modelo  $modelo
      * @return \Illuminate\Http\Response
      */
-    public function show(Modelo $modelo)
-    {
-        //
+    public function show($id){
+        $modelo = Modelo::find($id);
+
+        if(is_null($modelo)){
+            $data = [
+                'code' => 200,
+                'status' => 'success',
+                'message' => 'No se encontro el modelo que busca'
+            ];
+        } else {
+            $data = [
+                'code' => 200,
+                'status' => 'success',
+                'modelo' => $modelo
+            ];
+        }
+        return response()->json($data, $data['code']);
     }
 
     /**
@@ -55,8 +118,7 @@ class ModeloController extends Controller
      * @param  \App\Modelo  $modelo
      * @return \Illuminate\Http\Response
      */
-    public function edit(Modelo $modelo)
-    {
+    public function edit(Modelo $modelo){
         //
     }
 
@@ -67,9 +129,56 @@ class ModeloController extends Controller
      * @param  \App\Modelo  $modelo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Modelo $modelo)
-    {
-        //
+    public function update(Request $request, $id){
+        if(is_null(Modelo::find($id))){
+            $data = [
+                'code' => 400,
+                'status' => 'error',
+                'message' => 'No se encontro el modelo que busca'
+            ];
+        } else {
+            $json = $request->input('json', null);
+            $params_array = json_decode($json, true);
+
+            if(!empty($params_array)){
+                $validate = \Validator::make($params_array, [
+                    'tipo_id' => 'required|numeric',
+                    'marca_id' => 'required|numeric',
+                    'talla_id' => 'required|numeric',
+                    'name' => 'required',
+                    'stock' => 'nullable'
+                ]);
+    
+                if($validate->fails()){
+                    $data = [
+                        'code' => 400,
+                        'status' => 'error',
+                        'message' => $validate->errors()
+                    ];
+                } else {
+                    unset($params_array['id']);
+                    unset($params_array['created_at']);
+    
+                    $modelo = Modelo::find($id);
+                    
+                    $modelo->update($params_array);
+    
+                    $data = [
+                        'code' => 200,
+                        'status' => 'success',
+                        'modelo' => $modelo,
+                        'changes' => $params_array
+                    ];
+                }
+            } else {
+                $data = [
+                    'code' => 400,
+                    'status' => 'error',
+                    'message' => 'No se encontraron datos...'
+                ];
+            }            
+        }
+        return response()->json($data, $data['code']);
     }
 
     /**
@@ -78,8 +187,29 @@ class ModeloController extends Controller
      * @param  \App\Modelo  $modelo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Modelo $modelo)
-    {
-        //
+    public function destroy($id){
+        $modelo = Modelo::find($id);
+
+        if(is_null($modelo)){
+            $data = [
+                'code' => 200,
+                'status' => 'success',
+                'message' => 'El modelo que quiere eliminar no existe... vuelva a intentarlo'
+            ];
+        } else {
+
+            $modelo->delete();
+
+            $data = [
+                'code' => 200,
+                'status' => 'success',
+                'modelo' => $modelo,
+                'message' => 'El modelo ha sido eliminado correctamente'
+            ];
+        }
+
+        
+
+        return response()->json($data, $data['code']);
     }
 }

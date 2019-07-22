@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::resource('tipo', 'TipoController');
 Route::resource('marca', 'MarcaController');
 Route::resource('talla', 'TallaController');
+Route::resource('modelo', 'ModeloController');

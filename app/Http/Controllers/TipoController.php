@@ -149,6 +149,9 @@ class TipoController extends Controller
                         'error' => $validate->errors()
                     ];
                 } else {
+                    unset($params_array['id']);
+                    unset($params_array['created_at']);
+                    
                     $tipo = Tipo::find($id);
 
                     $tipo->update($params_array);

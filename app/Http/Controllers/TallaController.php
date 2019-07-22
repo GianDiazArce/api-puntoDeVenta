@@ -147,6 +147,8 @@ class TallaController extends Controller
                     $talla = Talla::find($id);
 
                     if(!is_null($talla)){
+                        unset($params_array['id']);
+                        unset($params_array['created_at']);
                         $talla->update($params_array);
 
                         $data = [
