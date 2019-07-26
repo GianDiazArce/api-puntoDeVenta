@@ -12,9 +12,16 @@ class VentaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function index(){
+        $ventas = Venta::all();
+
+        $data = [
+            'code' => 200,
+            'status' => 'success',
+            'ventas' => $ventas
+        ];
+
+        return response()->json($data, $data['code']);
     }
 
     /**
@@ -22,8 +29,7 @@ class VentaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create(){
         //
     }
 
@@ -33,9 +39,47 @@ class VentaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request){
+        $json = $request->input('json');
+        $params_array = json_decode($json, true);
+
+        if(!empty($params_array)){
+            $validate = \Validator::make($params_array, [
+                'user_id' => 'required|numeric',
+                'total' => 'required|numeric',
+                'discount' => 'nullable',
+                'status' => 'nullable|alpha'
+            ]);
+
+            if($validate->fails()){
+                $data = [
+                    'code' => 400,
+                    'status' => 'error',
+                    'message' => $validate->errors()
+                ];
+            } else {
+                $venta = new Venta();
+                $venta->user_id = $params_array['user_id'];
+                $venta->total = $params_array['total'];
+                $venta->discount = $params_array['discount'];
+                $venta->status = $params_array['status'];
+                $venta->save();
+
+                $data = [
+                    'code' => 200,
+                    'status' => 'success',
+                    'venta' => $venta
+                ];
+            }
+        } else {
+            $data = [
+                'code' => 400,
+                'status' => 'error',
+                'message' => 'Faltan datos'
+            ];
+        }
+
+        return response()->json($data, $data['code']);
     }
 
     /**
@@ -44,9 +88,24 @@ class VentaController extends Controller
      * @param  \App\Venta  $venta
      * @return \Illuminate\Http\Response
      */
-    public function show(Venta $venta)
-    {
-        //
+    public function show($id){
+        $venta = Venta::find($id);
+
+        if(is_null($venta)){
+            $data = [
+                'code' => 400,
+                'status' => 'error',
+                'message' => 'No existe la venta que busca'
+            ];
+        } else {
+            $data = [
+                'code' => 200,
+                'status' => 'success',
+                'venta' => $venta
+            ];
+        }
+
+        return response()->json($data, $data['code']);
     }
 
     /**
@@ -55,8 +114,7 @@ class VentaController extends Controller
      * @param  \App\Venta  $venta
      * @return \Illuminate\Http\Response
      */
-    public function edit(Venta $venta)
-    {
+    public function edit(Venta $venta){
         //
     }
 
@@ -67,9 +125,55 @@ class VentaController extends Controller
      * @param  \App\Venta  $venta
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Venta $venta)
-    {
-        //
+    public function update(Request $request, $id){
+        if(is_null(Venta::find($id)) ) {
+            $data = [
+                'code' => 400,
+                'status' => 'error',
+                'message' => 'No existe la venta que busca actualizar'
+            ];
+        } else {
+            $json = $request->input('json');
+            $params_array = json_decode($json, true);
+
+            if(!empty($params_array)){
+                $validate = \Validator::make($params_array, [
+                    'user_id' => 'required|numeric',
+                    'total' => 'required|numeric',
+                    'discount' => 'nullable',
+                    'status' => 'nullable|alpha'
+                ]);
+    
+                if($validate->fails()){
+                    $data = [
+                        'code' => 400,
+                        'status' => 'error',
+                        'message' => $validate->errors()
+                    ];
+                } else {
+                    unset($params_array['id']);
+                    unset($params_array['created_at']);
+
+                    $venta = Venta::find($id);
+                    $venta->update($params_array);
+
+                    $data = [
+                        'code' => 200,
+                        'status' => 'success',
+                        'venta' => $venta,
+                        'changes' => $params_array
+                    ];
+                }
+            } else {
+                $data = [
+                    'code' => 400,
+                    'status' => 'error',
+                    'message' => 'Faltan datos'
+                ];
+            }
+        }
+
+        return response()->json($data, $data['code']);
     }
 
     /**
@@ -78,8 +182,24 @@ class VentaController extends Controller
      * @param  \App\Venta  $venta
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Venta $venta)
-    {
-        //
+    public function destroy($id){
+        $venta = Venta::find($id);
+
+        if(is_null($venta)){
+            $data = [
+                'code' => 400,
+                'status' => 'error',
+                'message' => 'No existe la venta que busca eliminar'
+            ];
+        } else {
+            $venta->delete();
+            $data = [
+                'code' => 200,
+                'status' => 'success',
+                'message' => 'Fue eliminada la venta'
+            ];
+        }
+
+        return response()->json($data, $data['code']);
     }
 }
