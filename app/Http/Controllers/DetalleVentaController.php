@@ -12,9 +12,16 @@ class DetalleVentaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function index(){
+        $detalleVentas = DetalleVenta::all();
+
+        $data = [
+            'code' => 200,
+            'status' => 'success',
+            'detalleVentas' => $detalleVentas
+        ];
+
+        return response()->json($data, $data['code']);
     }
 
     /**
@@ -22,8 +29,7 @@ class DetalleVentaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create(){
         //
     }
 
@@ -33,9 +39,48 @@ class DetalleVentaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request){
+        $json = $request->input('json');
+        $params_array = json_decode($json, true);
+
+        if(!empty($params_array)){
+
+            $validate = \Validator::make($params_array, [
+                'venta_id' => 'required|numeric',
+                'modelo_id' => 'required|numeric',
+                'quantity' => 'required|numeric',
+                'price' => 'numeric'
+            ]);
+
+            if($validate->fails()){
+                $data = [
+                    'code' => 400,
+                    'status' => 'error',
+                    'message' => $validate->errors()
+                ];
+            } else {
+                $detalleVenta = new DetalleVenta();
+                $detalleVenta->venta_id = $params_array['venta_id'];
+                $detalleVenta->modelo_id = $params_array['modelo_id'];
+                $detalleVenta->quantity = $params_array['quantity'];
+                $detalleVenta->price = $params_array['price'];
+                $detalleVenta->save();
+
+                $data = [
+                    'code' => 200,
+                    'status' => 'success',
+                    'detalleVenta' => $detalleVenta
+                ];
+            }
+
+        } else {
+            $data = [
+                'code' => 400,
+                'status' => 'error',
+                'message' => 'Faltan datos'
+            ];
+        }
+        return response()->json($data, $data['code']);
     }
 
     /**
@@ -44,9 +89,23 @@ class DetalleVentaController extends Controller
      * @param  \App\DetalleVenta  $detalleVenta
      * @return \Illuminate\Http\Response
      */
-    public function show(DetalleVenta $detalleVenta)
-    {
-        //
+    public function show($id){
+        $detalleVenta = DetalleVenta::find($id);
+
+        if(is_null($detalleVenta)){
+            $data = [
+                'code' => 400,
+                'status' => 'error',
+                'message' => 'No se encuentra el detalle de venta que busca'
+            ];
+        } else {
+            $data = [
+                'code' => 200,
+                'status' => 'success',
+                'detalleVenta' => $detalleVenta
+            ];
+        }
+        return response()->json($data, $data['code']);
     }
 
     /**
@@ -55,8 +114,7 @@ class DetalleVentaController extends Controller
      * @param  \App\DetalleVenta  $detalleVenta
      * @return \Illuminate\Http\Response
      */
-    public function edit(DetalleVenta $detalleVenta)
-    {
+    public function edit(DetalleVenta $detalleVenta){
         //
     }
 
@@ -67,9 +125,53 @@ class DetalleVentaController extends Controller
      * @param  \App\DetalleVenta  $detalleVenta
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, DetalleVenta $detalleVenta)
-    {
-        //
+    public function update(Request $request, $id){
+        if(is_null(DetalleVenta::find($id))){
+            $data = [
+                'code' => 400,
+                'status' => 'error',
+                'message' => 'No se encuentra el detalle de venta que busca'
+            ];
+        } else {
+            $json = $request->input('json');
+            $params_array = json_decode($json, true);
+
+            if(!empty($params_array)){
+                $validate = \Validator::make($params_array, [
+                    'venta_id' => 'required|numeric',
+                    'modelo_id' => 'required|numeric',
+                    'quantity' => 'required|numeric',
+                    'price' => 'numeric'
+                ]);
+    
+                if($validate->fails()){
+                    $data = [
+                        'code' => 400,
+                        'status' => 'error',
+                        'message' => $validate->errors()
+                    ];
+                } else {
+                    unset($params_array['id']);
+                    unset($params_array['created_at']);
+
+                    $detalleVenta = DetalleVenta::find($id);
+                    $detalleVenta->update($params_array);
+
+                    $data = [
+                        'code' => 200,
+                        'status' => 'success',
+                        'detalleVenta' => $params_array
+                    ];
+                }
+            } else {
+                $data = [
+                    'code' => 400,
+                    'status' => 'error',
+                    'message' => 'Faltan datos...'
+                ];
+            }
+        }
+        return response()->json($data, $data['code']);
     }
 
     /**
@@ -78,8 +180,23 @@ class DetalleVentaController extends Controller
      * @param  \App\DetalleVenta  $detalleVenta
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DetalleVenta $detalleVenta)
-    {
-        //
+    public function destroy($id){
+        $detalleVenta = DetalleVenta::find($id);
+
+        if(is_null($detalleVenta)){
+            $data = [
+                'code' => 400,
+                'status' => 'error',
+                'message' => 'No se encuentra el detalle de venta que busca'
+            ];
+        } else {
+            $detalleVenta->delete();
+            $data = [
+                'code' => 200,
+                'status' => 'success',
+                'message' => 'El detalle de venta fue eliminado correctamente'
+            ];
+        }
+        return response()->json($data, $data['code']);
     }
 }

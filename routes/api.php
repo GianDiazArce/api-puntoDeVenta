@@ -22,3 +22,4 @@ Route::resource('marca', 'MarcaController');
 Route::resource('talla', 'TallaController');
 Route::resource('modelo', 'ModeloController');
 Route::resource('venta', 'VentaController');
+Route::resource('detalle-venta', 'DetalleVentaController');
