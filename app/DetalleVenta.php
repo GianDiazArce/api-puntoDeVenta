@@ -15,4 +15,9 @@ class DetalleVenta extends Model
         return $this->belongsTo('App\Venta', 'venta_id');
     }
 
+    public function modelo()
+    {
+        return $this->belongsTo('App\Modelo', 'modelo_id');
+    }
+
 }

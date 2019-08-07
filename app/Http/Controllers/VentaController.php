@@ -13,7 +13,7 @@ class VentaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $ventas = Venta::all();
+        $ventas = Venta::all()->load('user');
 
         $data = [
             'code' => 200,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DetalleVenta;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class DetalleVentaController extends Controller
 {
@@ -197,6 +198,25 @@ class DetalleVentaController extends Controller
                 'message' => 'El detalle de venta fue eliminado correctamente'
             ];
         }
+        return response()->json($data, $data['code']);
+    }    
+    public function detalleVenta($id){
+        $detalleVentas = DetalleVenta::where('venta_id', $id)->get()->load('modelo');
+
+        if(!is_null($detalleVentas)){
+            $data = [
+                'code' => 200,
+                'status' => 'success',
+                'detalleVentas' => $detalleVentas
+            ];
+        } else {
+            $data = [
+                'code' => 404,
+                'status' => 'error',
+                'message' => 'No se encuentra lo que busca'
+            ];
+        }
+
         return response()->json($data, $data['code']);
     }
 }

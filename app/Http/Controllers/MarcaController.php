@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Marca;
 use Illuminate\Http\Request;
+use App\Modelo;
 
 class MarcaController extends Controller
 {
@@ -197,5 +198,25 @@ class MarcaController extends Controller
         }
 
         return response()->json($data, $data['code']);
+    }
+    /**
+     * Busca los modelos que tengan tipo_id igual a id del tipo.
+     *
+     * @param  \App\Marca  $marca
+     * @return \Illuminate\Http\Response
+     */
+    public function getModelosByTipoWithMarca($id){
+        $modelos = Modelo::where('tipo_id', $id)->get()->load('marca');
+        
+      
+        
+        
+        $data = [
+            'code' => 200,
+            'modelos' => $modelos
+        ];
+        
+
+        return response()->json($data, 200);
     }
 }

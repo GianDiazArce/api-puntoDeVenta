@@ -14,7 +14,7 @@ class TipoController extends Controller
      */
     public function index()
     {
-        $tipos = Tipo::all();
+        $tipos = Tipo::orderBy('name', 'asc')->get();
 
         $data = [
             'code' => 200,

@@ -24,4 +24,8 @@ class Modelo extends Model
     {
         return $this->belongsTo('App\Marca', 'marca_id');
     }
+    public function detalleVentas()
+    {
+        return $this->hasMany('App\DetalleVenta');
+    }
 }

@@ -14,7 +14,7 @@ class ModeloController extends Controller
      */
     public function index(){
 
-        $modelos = Modelo::all()->load('talla', 'marca', 'tipo');
+        $modelos = Modelo::orderBy('name', 'asc')->get()->load('talla', 'marca', 'tipo');
 
         $data = [
             'code' => 200,
@@ -209,6 +209,26 @@ class ModeloController extends Controller
         }
 
         
+
+        return response()->json($data, $data['code']);
+    }
+
+
+    
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Modelo  $modelo
+     * @return \Illuminate\Http\Response
+     */
+    public function getModeloByTipoAndMarca($tipo_id, $marca_id){
+        $modelos = Modelo::where('tipo_id', $tipo_id)->where('marca_id', $marca_id)->get()->load('talla');
+
+        $data = [
+            'code' => 200,
+            'status' => 'success',
+            'modelos' => $modelos
+        ];
 
         return response()->json($data, $data['code']);
     }
