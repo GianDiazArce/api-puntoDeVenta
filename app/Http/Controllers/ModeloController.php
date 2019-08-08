@@ -14,7 +14,7 @@ class ModeloController extends Controller
      */
     public function index(){
 
-        $modelos = Modelo::orderBy('name', 'asc')->get()->load('talla', 'marca', 'tipo');
+        $modelos = Modelo::orderBy('name', 'asc')->get()->load('talla', 'marca');
 
         $data = [
             'code' => 200,
@@ -46,8 +46,7 @@ class ModeloController extends Controller
         $params_array = json_decode($json, true);
 
         if(!empty($params_array)){
-            $validate = \Validator::make($params_array, [
-                'tipo_id' => 'required|numeric',
+            $validate = \Validator::make($params_array, [                
                 'marca_id' => 'required|numeric',
                 'talla_id' => 'required|numeric',
                 'name' => 'required',
@@ -62,7 +61,6 @@ class ModeloController extends Controller
                 ];
             } else {
                 $modelo = new Modelo();
-                $modelo->tipo_id = $params_array['tipo_id'];
                 $modelo->marca_id = $params_array['marca_id'];
                 $modelo->talla_id = $params_array['talla_id'];
                 $modelo->name = $params_array['name'];
@@ -142,7 +140,6 @@ class ModeloController extends Controller
 
             if(!empty($params_array)){
                 $validate = \Validator::make($params_array, [
-                    'tipo_id' => 'required|numeric',
                     'marca_id' => 'required|numeric',
                     'talla_id' => 'required|numeric',
                     'name' => 'required',
@@ -214,22 +211,21 @@ class ModeloController extends Controller
     }
 
 
-    
     /**
-     * Display the specified resource.
+     * get Models by marca_id.
      *
      * @param  \App\Modelo  $modelo
      * @return \Illuminate\Http\Response
      */
-    public function getModeloByTipoAndMarca($tipo_id, $marca_id){
-        $modelos = Modelo::where('tipo_id', $tipo_id)->where('marca_id', $marca_id)->get()->load('talla');
+    public function getModeloByMarca($id){
+        $modelos = Modelo::where('marca_id', $id)->get()->load('marca', 'talla');
 
         $data = [
             'code' => 200,
             'status' => 'success',
             'modelos' => $modelos
         ];
-
         return response()->json($data, $data['code']);
     }
+    
 }

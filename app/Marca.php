@@ -14,4 +14,8 @@ class Marca extends Model
     {
         return $this->hasMany('App\Modelo');
     }
+    public function tipo()
+    {
+        return $this->belongsTo('App\Tipo', 'tipo_id');
+    }
 }

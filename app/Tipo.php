@@ -10,8 +10,8 @@ class Tipo extends Model
         'name'
     ];
 
-    public function modelos()
+    public function marcas()
     {
-        return $this->hasMany('App\Modelo');
+        return $this->hasMany('App\Marca');
     }
 }

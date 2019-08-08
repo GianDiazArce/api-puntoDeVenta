@@ -19,17 +19,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resource('tipo', 'TipoController');
 Route::resource('marca', 'MarcaController');
-Route::get('modelo/tipo/{id}', 'MarcaController@getModelosByTipoWithMarca');
-
+Route::get('marca/tipo/{id}', 'MarcaController@getMarcasByTipo');
 
 Route::resource('talla', 'TallaController');
 
 Route::resource('modelo', 'ModeloController');
-Route::get('talla/modelo/{id}', 'ModeloController@getTallasByModelo');
-Route::get('modelo/{tipo_id}/{marca_id}', 'ModeloController@getModeloByTipoAndMarca');
+Route::get('modelo/marca/{id}','ModeloController@getModeloByMarca');
 
 Route::resource('venta', 'VentaController');
 
 
 Route::resource('detalle-venta', 'DetalleVentaController');
-Route::get('detalle-venta/venta/{id}','DetalleVentaController@detalleVenta');

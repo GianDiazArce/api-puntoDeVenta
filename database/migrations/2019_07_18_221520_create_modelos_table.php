@@ -17,8 +17,7 @@ class CreateModelosTable extends Migration
             $table->bigIncrements('id');
 
             
-            $table->unsignedBigInteger('tipo_id')->unsigned();
-            $table->foreign('tipo_id')->references('id')->on('tipos');
+            
             
 
             $table->unsignedBigInteger('marca_id')->unsigned();

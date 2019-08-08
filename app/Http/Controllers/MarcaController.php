@@ -14,7 +14,7 @@ class MarcaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $marcas = Marca::all();
+        $marcas = Marca::all()->load('tipo');
 
         $data = [
             'code' => 200,
@@ -46,7 +46,8 @@ class MarcaController extends Controller
 
         if(!empty($params_array)){
             $validate = \Validator::make($params_array, [
-                'name' => 'required'
+                'name' => 'required',
+                'tipo_id' => 'required'
             ]);
 
             if($validate->fails()){
@@ -59,6 +60,7 @@ class MarcaController extends Controller
                 
                 $marca = new Marca();
                 $marca->name = $params_array['name'];
+                $marca->tipo_id = $params_array['tipo_id'];
 
                 $marca->save();
 
@@ -123,7 +125,8 @@ class MarcaController extends Controller
 
             if(!empty($params_array)){
                 $validate = \Validator::make($params_array,[
-                    'name' => 'required'
+                    'name' => 'required',
+                    'tipo_id' => 'required'
                 ]);
 
                 if($validate->fails()){
@@ -199,24 +202,23 @@ class MarcaController extends Controller
 
         return response()->json($data, $data['code']);
     }
+
     /**
-     * Busca los modelos que tengan tipo_id igual a id del tipo.
+     * Find marca by tipo_id.
      *
      * @param  \App\Marca  $marca
      * @return \Illuminate\Http\Response
      */
-    public function getModelosByTipoWithMarca($id){
-        $modelos = Modelo::where('tipo_id', $id)->get()->load('marca');
-        
-      
-        
-        
+    public function getMarcasByTipo($id){
+        $marcas = Marca::where('tipo_id', $id)->get();
+
         $data = [
             'code' => 200,
-            'modelos' => $modelos
+            'status' => 'success',
+            'marcas' => $marcas
         ];
-        
 
-        return response()->json($data, 200);
+        return response()->json($data, $data['code']);
     }
+    
 }

@@ -15,10 +15,7 @@ class Modelo extends Model
         return $this->belongsTo('App\Talla', 'talla_id');
     }
 
-    public function tipo()
-    {
-        return $this->belongsTo('App\Tipo', 'tipo_id');
-    }
+    
 
     public function marca()
     {
