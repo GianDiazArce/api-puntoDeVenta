@@ -27,6 +27,8 @@ Route::resource('modelo', 'ModeloController');
 Route::get('modelo/marca/{id}','ModeloController@getModeloByMarca');
 
 Route::resource('venta', 'VentaController');
-
+Route::post('login', 'UserController@login');
+Route::post('register', 'UserController@register');
+Route::post('user/update', 'UserController@update');
 
 Route::resource('detalle-venta', 'DetalleVentaController');

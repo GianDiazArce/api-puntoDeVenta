@@ -8,6 +8,9 @@ use Illuminate\Http\Response;
 
 class DetalleVentaController extends Controller
 {
+    public function __construct(){
+        $this->middleware('api.auth', ['except' => ['index', 'show','detalleVenta']]);
+    }
     /**
      * Display a listing of the resource.
      *

@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 
 class TipoController extends Controller
 {
+    public function __construct(){
+        $this->middleware('api.auth', ['except' => ['index', 'show']]);
+    }
     /**
      * Display a listing of the resource.
      *

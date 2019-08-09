@@ -8,6 +8,9 @@ use App\Modelo;
 
 class MarcaController extends Controller
 {
+    public function __construct(){
+        $this->middleware('api.auth', ['except' => ['index', 'show','getMarcasByTipo']]);
+    }
     /**
      * Display a listing of the resource.
      *
