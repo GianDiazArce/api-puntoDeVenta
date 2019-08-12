@@ -32,3 +32,4 @@ Route::post('register', 'UserController@register');
 Route::post('user/update', 'UserController@update');
 
 Route::resource('detalle-venta', 'DetalleVentaController');
+Route::get('detalle-venta/venta/{id}', 'DetalleVentaController@detalleVenta');

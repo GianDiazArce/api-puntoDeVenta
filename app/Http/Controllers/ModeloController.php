@@ -95,7 +95,7 @@ class ModeloController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id){
-        $modelo = Modelo::find($id);
+        $modelo = Modelo::find($id)->load('talla');
 
         if(is_null($modelo)){
             $data = [

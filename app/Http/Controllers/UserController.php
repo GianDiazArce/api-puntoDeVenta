@@ -65,7 +65,6 @@ class UserController extends Controller
         $params_array = json_decode($json, true);
 
         $validate = \Validator::make($params_array, [
-            'name' => 'required',
             'username' => 'required',
             'password' => 'required'
         ]);
