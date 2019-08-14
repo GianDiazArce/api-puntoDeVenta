@@ -30,6 +30,7 @@ Route::resource('venta', 'VentaController');
 Route::post('login', 'UserController@login');
 Route::post('register', 'UserController@register');
 Route::post('user/update', 'UserController@update');
+Route::get('user/{id}', 'UserController@getUser');
 
 Route::resource('detalle-venta', 'DetalleVentaController');
 Route::get('detalle-venta/venta/{id}', 'DetalleVentaController@detalleVenta');

@@ -135,4 +135,16 @@ class UserController extends Controller
 
         return response()->json($data, $data['code']);
     }
+
+    public function getUser($id){
+        $user = User::find($id)->first();
+
+        $data = [
+            'code' => 200,
+            'status' => 'success',
+            'user' => $user
+        ];
+
+        return response()->json($data, $data['code']);
+    }
 }

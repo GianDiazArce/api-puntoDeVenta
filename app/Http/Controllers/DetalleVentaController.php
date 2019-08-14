@@ -94,7 +94,7 @@ class DetalleVentaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id){
-        $detalleVenta = DetalleVenta::find($id);
+        $detalleVenta = DetalleVenta::find($id)->load('venta', 'modelo');
 
         if(is_null($detalleVenta)){
             $data = [
@@ -204,7 +204,7 @@ class DetalleVentaController extends Controller
         return response()->json($data, $data['code']);
     }    
     public function detalleVenta($id){
-        $detalleVentas = DetalleVenta::where('venta_id', $id)->get()->load('modelo');
+        $detalleVentas = DetalleVenta::where('venta_id', $id)->get()->load('modelo', 'venta');
 
         if(!is_null($detalleVentas)){
             $data = [
