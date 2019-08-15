@@ -147,4 +147,8 @@ class UserController extends Controller
 
         return response()->json($data, $data['code']);
     }
+
+    public function AuthRouteAPI(Request $request){
+        return $request->user();
+     }
 }
