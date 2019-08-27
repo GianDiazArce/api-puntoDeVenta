@@ -205,4 +205,41 @@ class VentaController extends Controller
 
         return response()->json($data, $data['code']);
     }
+
+    public function getSaleByMonth($month){
+
+        $ventas = Venta::whereMonth('created_at', $month)->get();
+
+        $data = [
+            'code' => 200,
+            'status' => 'success',
+            'ventas' => $ventas
+        ];
+
+
+        return response()->json($data, $data['code']);
+    }
+
+    public function getSaleByYearAndMonth($month, $year){
+        $ventas = Venta::whereYear('created_at', $year)->whereMonth('created_at', $month)->get();
+
+        $data = [
+            'code' => 200,
+            'status' => 'success',
+            'ventas' => $ventas
+        ];
+
+        return response()->json($data, $data['code']);
+    }
+    public function getSaleByYear($year){
+        $ventas = Venta::whereYear('created_at', $year)->get();
+
+        $data = [
+            'code' => 200,
+            'status' => 'success',
+            'ventas' => $ventas
+        ];
+
+        return response()->json($data, $data['code']);
+    }
 }

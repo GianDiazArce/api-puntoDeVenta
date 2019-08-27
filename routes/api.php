@@ -28,6 +28,11 @@ Route::resource('modelo', 'ModeloController');
 Route::get('modelo/marca/{id}','ModeloController@getModeloByMarca');
 
 Route::resource('venta', 'VentaController');
+Route::get('venta/mes/{mes}', 'VentaController@getSaleByMonth');
+Route::get('venta/year/{year}', 'VentaController@getSaleByYear');
+Route::get('venta/{month}/{year}', 'VentaController@getSaleByYearAndMonth');
+
+
 Route::post('login', 'UserController@login');
 Route::post('register', 'UserController@register');
 Route::post('user/update', 'UserController@update');
