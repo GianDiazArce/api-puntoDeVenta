@@ -208,7 +208,7 @@ class VentaController extends Controller
 
     public function getSaleByMonth($month){
 
-        $ventas = Venta::whereMonth('created_at', $month)->get();
+        $ventas = Venta::whereMonth('created_at', $month)->get()->load('user');
 
         $data = [
             'code' => 200,
@@ -221,7 +221,7 @@ class VentaController extends Controller
     }
 
     public function getSaleByYearAndMonth($month, $year){
-        $ventas = Venta::whereYear('created_at', $year)->whereMonth('created_at', $month)->get();
+        $ventas = Venta::whereYear('created_at', $year)->whereMonth('created_at', $month)->get()->load('user');
 
         $data = [
             'code' => 200,
@@ -232,7 +232,7 @@ class VentaController extends Controller
         return response()->json($data, $data['code']);
     }
     public function getSaleByYear($year){
-        $ventas = Venta::whereYear('created_at', $year)->get();
+        $ventas = Venta::whereYear('created_at', $year)->get()->load('user');
 
         $data = [
             'code' => 200,
