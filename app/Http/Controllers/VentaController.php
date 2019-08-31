@@ -195,7 +195,7 @@ class VentaController extends Controller
                 'message' => 'No existe la venta que busca eliminar'
             ];
         } else {
-            $venta->detalleVentas()->detach();
+            //$venta->detalleVentas()->detach();
             $venta->delete();
             $data = [
                 'code' => 200,
