@@ -92,7 +92,7 @@ class VentaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id){
-        $venta = Venta::find($id);
+        $venta = Venta::find($id)->load('detalleVentas');
 
         if(is_null($venta)){
             $data = [
@@ -195,6 +195,7 @@ class VentaController extends Controller
                 'message' => 'No existe la venta que busca eliminar'
             ];
         } else {
+            $venta->detalleVentas()->detach();
             $venta->delete();
             $data = [
                 'code' => 200,
@@ -233,6 +234,18 @@ class VentaController extends Controller
     }
     public function getSaleByYear($year){
         $ventas = Venta::whereYear('created_at', $year)->get()->load('user');
+
+        $data = [
+            'code' => 200,
+            'status' => 'success',
+            'ventas' => $ventas
+        ];
+
+        return response()->json($data, $data['code']);
+    }
+
+    public function getSaleByDayAndMonth($day, $month){
+        $ventas = Venta::whereMonth('created_at', $month)->whereDay('created_at', $day)->get()->load('user');
 
         $data = [
             'code' => 200,

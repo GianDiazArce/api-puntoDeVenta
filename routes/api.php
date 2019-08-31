@@ -26,11 +26,14 @@ Route::resource('talla', 'TallaController');
 
 Route::resource('modelo', 'ModeloController');
 Route::get('modelo/marca/{id}','ModeloController@getModeloByMarca');
+Route::get('modelo/{id}/{stock}','ModeloController@updateStock');
 
 Route::resource('venta', 'VentaController');
 Route::get('venta/mes/{mes}', 'VentaController@getSaleByMonth');
 Route::get('venta/year/{year}', 'VentaController@getSaleByYear');
 Route::get('venta/{month}/{year}', 'VentaController@getSaleByYearAndMonth');
+Route::get('venta/dia/{day}/{month}', 'VentaController@getSaleByDayAndMonth');
+
 
 
 Route::post('login', 'UserController@login');

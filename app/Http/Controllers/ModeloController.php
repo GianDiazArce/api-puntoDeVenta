@@ -230,5 +230,38 @@ class ModeloController extends Controller
         ];
         return response()->json($data, $data['code']);
     }
+
+    /**
+     * get Models by marca_id.
+     *
+     * @param  \App\Modelo  $modelo
+     * @return \Illuminate\Http\Response
+     */
+    public function updateStock($id, $stock){
+        $modelo = Modelo::find($id);
+
+        if(is_null($modelo)){
+            $data = [
+                'code' => 400,
+                'status' => 'error',
+                'message' => 'No existe ese modelo que busca'
+            ];
+        } else {
+            
+            $stock = $modelo->stock - $stock;
+            $modelo->stock = $stock;
+            $modelo->save();
+
+            $data = [
+                'code' => 200,
+                'status' => 'success',
+                'modelo' => $modelo
+            ];
+                        
+        }
+
+        return response()->json($data, $data['code']);
+
+    }
     
 }
